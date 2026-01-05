@@ -7,7 +7,12 @@
 		{
 			"Name": "UnrealGAS",
 			"Type": "Runtime",
-			"LoadingPhase": "Default"
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"Engine",
+				"GameplayAbilities",
+				"UMG"
+			]
 		}
 	],
 	"Plugins": [
