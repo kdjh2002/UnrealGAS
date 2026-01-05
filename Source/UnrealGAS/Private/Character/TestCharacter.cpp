@@ -22,15 +22,15 @@ ATestCharacter::ATestCharacter()
 	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 
 	// 어트리뷰트 셋 생성
-	StatusAttributeSet = CreateDefaultSubobject<UResourceAttributeSet>(TEXT("Status"));
+	ResourceAttributeSet = CreateDefaultSubobject<UResourceAttributeSet>(TEXT("Status"));
 }
 
 void ATestCharacter::TestHealthChange(float Amount)
 {
-	if (StatusAttributeSet)
+	if (ResourceAttributeSet)
 	{
-		float CurrentValue = StatusAttributeSet->GetHealth();
-		StatusAttributeSet->SetHealth(CurrentValue + Amount);
+		float CurrentValue = ResourceAttributeSet->GetHealth();
+		ResourceAttributeSet->SetHealth(CurrentValue + Amount);
 	}
 }
 
@@ -52,21 +52,21 @@ void ATestCharacter::BeginPlay()
 
 	}
 
-	if (StatusAttributeSet)
+	if (ResourceAttributeSet)
 	{
 		if (BarWidgetComponent && BarWidgetComponent->GetWidget())
 		{
 			if (BarWidgetComponent->GetWidget()->Implements<UTwinResource>())
 			{
-				ITwinResource::Execute_UpdateMaxHealth(BarWidgetComponent->GetWidget(), StatusAttributeSet->GetMaxHealth());
-				ITwinResource::Execute_UpdateMaxMana(BarWidgetComponent->GetWidget(), StatusAttributeSet->GetMaxMana());
+				ITwinResource::Execute_UpdateMaxHealth(BarWidgetComponent->GetWidget(), ResourceAttributeSet->GetMaxHealth());
+				ITwinResource::Execute_UpdateMaxMana(BarWidgetComponent->GetWidget(), ResourceAttributeSet->GetMaxMana());
 
-				ITwinResource::Execute_UpdateCurrentHealth(BarWidgetComponent->GetWidget(), StatusAttributeSet->GetHealth());
-				ITwinResource::Execute_UpdateCurrentMana(BarWidgetComponent->GetWidget(), StatusAttributeSet->GetMana());
+				ITwinResource::Execute_UpdateCurrentHealth(BarWidgetComponent->GetWidget(), ResourceAttributeSet->GetHealth());
+				ITwinResource::Execute_UpdateCurrentMana(BarWidgetComponent->GetWidget(), ResourceAttributeSet->GetMana());
 			}
 
-		//StatusAttributeSet->Health = 50.0f;	// 절대 안됨
-		//StatusAttributeSet->SetHealth(50.0f);	// 무조건 Setter로 변경해야 한다.
+		//ResourceAttributeSet->Health = 50.0f;	// 절대 안됨
+		//ResourceAttributeSet->SetHealth(50.0f);	// 무조건 Setter로 변경해야 한다.
 	
 		}
 	}
@@ -78,16 +78,16 @@ void ATestCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	FString healthString = FString::Printf(TEXT("%.1f / %.1f"),
-		StatusAttributeSet->GetHealth(), StatusAttributeSet->GetMaxHealth());
-	UE_LOG(LogTemp, Log, TEXT("%s"), *healthString);
-		DrawDebugString(GetWorld(), GetActorLocation(), healthString, nullptr, FColor::White, 0, true);
+		ResourceAttributeSet->GetHealth(), ResourceAttributeSet->GetMaxHealth());
+	//UE_LOG(LogTemp, Log, TEXT("%s"), *healthString);
+	//	DrawDebugString(GetWorld(), GetActorLocation(), healthString, nullptr, FColor::White, 0, true);
 
 
 		////컴포넌트에서 UUserWidget을 가져와 클래스 캐스팅
 		//UBarWidget* HealthUI = Cast<UBarWidget>(HealthWidgetComponent->GetWidget());
 
-		//float CurrentHP = StatusAttributeSet->GetHealth();
-		//float MaxHP = StatusAttributeSet->GetMaxHealth();
+		//float CurrentHP = ResourceAttributeSet->GetHealth();
+		//float MaxHP = ResourceAttributeSet->GetMaxHealth();
 
 		////위젯 업데이트함수 호출
 		//HealthUI->UpdateHealth(CurrentHP, MaxHP);
@@ -104,13 +104,13 @@ void ATestCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 void ATestCharacter::OnHealthChange(const FOnAttributeChangeData& InData)
 {
 	UE_LOG(LogTemp, Log, TEXT("Health Change : %.1f->%.1f"), InData.OldValue, InData.NewValue);
-	ITwinResource::Execute_UpdateCurrentHealth(BarWidgetComponent->GetWidget(), StatusAttributeSet->GetHealth());
+	ITwinResource::Execute_UpdateCurrentHealth(BarWidgetComponent->GetWidget(), ResourceAttributeSet->GetHealth());
 }
 
 void ATestCharacter::OnManaChange(const FOnAttributeChangeData& InData)
 {
 	UE_LOG(LogTemp, Log, TEXT("On Mana Change : %.1f -> %.1f"), InData.OldValue, InData.NewValue);
-	ITwinResource::Execute_UpdateCurrentMana(BarWidgetComponent->GetWidget(), StatusAttributeSet->GetMana());
+	ITwinResource::Execute_UpdateCurrentMana(BarWidgetComponent->GetWidget(), ResourceAttributeSet->GetMana());
 }
 
 

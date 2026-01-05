@@ -62,5 +62,5 @@ protected:
 
 private:
 	UPROPERTY()
-	TObjectPtr<UResourceAttributeSet> StatusAttributeSet = nullptr;
+	TObjectPtr<UResourceAttributeSet> ResourceAttributeSet = nullptr;
 };
