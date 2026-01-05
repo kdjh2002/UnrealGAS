@@ -4,7 +4,7 @@
 #include "Character/TestCharacter.h"
 #include "AbilitySystemComponent.h"
 #include "Components/WidgetComponent.h"
-#include "GameAbilitySystem/StatusAttributeSet.h"
+#include "GameAbilitySystem/ResourceAttributeSet.h"
 
 #include "Interface/TwinResource.h"
 #include "UI/BarWidget.h"
@@ -22,7 +22,7 @@ ATestCharacter::ATestCharacter()
 	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 
 	// 어트리뷰트 셋 생성
-	StatusAttributeSet = CreateDefaultSubobject<UStatusAttributeSet>(TEXT("Status"));
+	StatusAttributeSet = CreateDefaultSubobject<UResourceAttributeSet>(TEXT("Status"));
 }
 
 void ATestCharacter::TestHealthChange(float Amount)
@@ -45,7 +45,7 @@ void ATestCharacter::BeginPlay()
 
 		//초기화 이후에만 가능
 		FOnGameplayAttributeValueChange& onHealthChange =
-			AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UStatusAttributeSet::GetHealthAttribute());
+			AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UResourceAttributeSet::GetHealthAttribute());
 
 
 		onHealthChange.AddUObject(this, &ATestCharacter::OnHealthChange);	//Health가 변경되었을떄 실행될 함수 바인딩

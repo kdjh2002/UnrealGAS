@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "GameAbilitySystem/StatusAttributeSet.h"
+#include "GameAbilitySystem/ResourceAttributeSet.h"
 #include "GameplayEffectExtension.h"
 
-UStatusAttributeSet::UStatusAttributeSet()
+UResourceAttributeSet::UResourceAttributeSet()
 {
 	InitMaxHealth(100.0f);
 	InitHealth(100.0f);
@@ -12,7 +12,7 @@ UStatusAttributeSet::UStatusAttributeSet()
 	InitMana(100.0f);
 }
 
-void UStatusAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+void UResourceAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
 	// 값 검증 및 제한(Clamp) 용도. 순수한 수학적 처리 용도.
 
@@ -27,7 +27,7 @@ void UStatusAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute
 	}
 }
 
-void UStatusAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
+void UResourceAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
 	// 게임 로직 실행, 이벤트 발생, 다른 시스템과의 상호작용 용도
 	Super::PostGameplayEffectExecute(Data);
