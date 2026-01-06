@@ -5,6 +5,8 @@
 #include "AbilitySystemComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameAbilitySystem/ResourceAttributeSet.h"
+#include "GameAbilitySystem/StatusAttributeSet.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 #include "Interface/TwinResource.h"
 #include "UI/BarWidget.h"
@@ -22,7 +24,8 @@ ATestCharacter::ATestCharacter()
 	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 
 	// 어트리뷰트 셋 생성
-	ResourceAttributeSet = CreateDefaultSubobject<UResourceAttributeSet>(TEXT("Status"));
+	ResourceAttributeSet = CreateDefaultSubobject<UResourceAttributeSet>(TEXT("Resource"));
+	StatusAttributeSet = CreateDefaultSubobject<UStatusAttributeSet>(TEXT("Status"));
 }
 
 void ATestCharacter::TestHealthChange(float Amount)
@@ -97,10 +100,20 @@ void ATestCharacter::BeginPlay()
 			AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UResourceAttributeSet::GetManaAttribute());
 		onManaChange.AddUObject(this, &ATestCharacter::OnManaChange);	//Health가 변경되었을떄 실행될 함수 바인딩
 
-		FOnGameplayAttributeValueChange& onMaxManaChange =
-			AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UResourceAttributeSet::GetMaxHealthAttribute());
-		onMaxManaChange.AddUObject(this, &ATestCharacter::OnMaxManaChange);	//Health가 변경되었을떄 실행될 함수 바인딩
+		FOnGameplayAttributeValueChange& onJumpPowerChange =
+			AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UStatusAttributeSet::GetJumpPowerAttribute());
+		onJumpPowerChange.AddUObject(this, &ATestCharacter::OnJumpPowerChange);	//Health가 변경되었을떄 실행될 함수 바인딩
 
+		FOnGameplayAttributeValueChange& onSpeedChange =
+			AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UStatusAttributeSet::GetSpeedAttribute());
+		onSpeedChange.AddUObject(this, &ATestCharacter::OnSpeedChange);	//Health가 변경되었을떄 실행될 함수 바인딩
+
+		if (AbilitySystemComponent && StatusAttributeSet)
+		{
+			// 실제 Movement에 설정된 값을 GAS 수치로 가져오기
+			StatusAttributeSet->InitSpeed(GetCharacterMovement()->MaxWalkSpeed);
+			StatusAttributeSet->InitJumpPower(GetCharacterMovement()->JumpZVelocity);
+		}
 	}
 
 	if (ResourceAttributeSet)
@@ -137,17 +150,6 @@ void ATestCharacter::Tick(float DeltaTime)
 	}
 	//UE_LOG(LogTemp, Log, TEXT("%s"), *healthString);
 	//	DrawDebugString(GetWorld(), GetActorLocation(), healthString, nullptr, FColor::White, 0, true);
-
-
-		////컴포넌트에서 UUserWidget을 가져와 클래스 캐스팅
-		//UBarWidget* HealthUI = Cast<UBarWidget>(HealthWidgetComponent->GetWidget());
-
-		//float CurrentHP = ResourceAttributeSet->GetHealth();
-		//float MaxHP = ResourceAttributeSet->GetMaxHealth();
-
-		////위젯 업데이트함수 호출
-		//HealthUI->UpdateHealth(CurrentHP, MaxHP);
-
 }
 
 // Called to bind functionality to input
@@ -178,6 +180,17 @@ void ATestCharacter::OnManaChange(const FOnAttributeChangeData& InData)
 {
 	UE_LOG(LogTemp, Log, TEXT("On Mana Change : %.1f -> %.1f"), InData.OldValue, InData.NewValue);
 	ITwinResource::Execute_UpdateCurrentMana(BarWidgetComponent->GetWidget(), ResourceAttributeSet->GetMana());
+}
+
+void ATestCharacter::OnJumpPowerChange(const FOnAttributeChangeData& InData)
+{
+	// 수치가 변하면 즉시 캐릭터 속도에 반영 (PostGameplayEffectExecute와 중복이지만 안전함)
+	GetCharacterMovement()->MaxWalkSpeed = InData.NewValue;
+}
+
+void ATestCharacter::OnSpeedChange(const FOnAttributeChangeData& InData)
+{
+	GetCharacterMovement()->JumpZVelocity = InData.NewValue;
 }
 
 
