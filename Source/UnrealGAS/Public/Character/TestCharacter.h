@@ -30,6 +30,11 @@ public:
 	void TestHealthChange(float Amount);
 	UFUNCTION(BlueprintCallable)
 	void TestSetByCaller(float Amount);
+	UFUNCTION(BlueprintCallable)
+	void TestAddInfiniteEffect();
+	UFUNCTION(BlueprintCallable)
+	void TestRemoveInfiniteEffect();
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -50,6 +55,8 @@ public:
 	float TestValue = 10.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Test")
 	TSubclassOf<UGameplayEffect> TestEffectClass = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Test")
+	TSubclassOf<UGameplayEffect> TestInfiniteEffectClass = nullptr;
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ability")
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent = nullptr;
@@ -64,4 +71,7 @@ private:
 
 
 	FGameplayTag Tag_EffectDamage;
+
+	//±¸Á¶Ã¼
+	FActiveGameplayEffectHandle TestInfinite;
 };
