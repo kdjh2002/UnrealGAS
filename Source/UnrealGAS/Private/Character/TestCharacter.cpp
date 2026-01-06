@@ -34,6 +34,23 @@ void ATestCharacter::TestHealthChange(float Amount)
 	}
 }
 
+void ATestCharacter::TestSetByCaller(float Amount)
+{
+	if (AbilitySystemComponent)
+	{
+		FGameplayEffectContextHandle EffectContext = AbilitySystemComponent->MakeEffectContext();
+		FGameplayEffectSpecHandle SpecHandle = AbilitySystemComponent->MakeOutgoingSpec(TestEffectClass, 0, EffectContext);
+
+		if (SpecHandle.IsValid())
+		{
+			{
+				SpecHandle.Data->SetSetByCallerMagnitude(Tag_EffectDamage, Amount);
+				AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+			}
+		}
+	}
+}
+
 // Called when the game starts or when spawned
 void ATestCharacter::BeginPlay()
 {
@@ -46,9 +63,19 @@ void ATestCharacter::BeginPlay()
 		//초기화 이후에만 가능
 		FOnGameplayAttributeValueChange& onHealthChange =
 			AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UResourceAttributeSet::GetHealthAttribute());
-
-
 		onHealthChange.AddUObject(this, &ATestCharacter::OnHealthChange);	//Health가 변경되었을떄 실행될 함수 바인딩
+
+		FOnGameplayAttributeValueChange& onMaxHealthChange =
+			AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UResourceAttributeSet::GetMaxHealthAttribute());
+		onMaxHealthChange.AddUObject(this, &ATestCharacter::OnMaxHealthChange);	//Health가 변경되었을떄 실행될 함수 바인딩
+
+		FOnGameplayAttributeValueChange& onManaChange =
+			AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UResourceAttributeSet::GetManaAttribute());
+		onManaChange.AddUObject(this, &ATestCharacter::OnManaChange);	//Health가 변경되었을떄 실행될 함수 바인딩
+
+		FOnGameplayAttributeValueChange& onMaxManaChange =
+			AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UResourceAttributeSet::GetMaxHealthAttribute());
+		onMaxManaChange.AddUObject(this, &ATestCharacter::OnMaxManaChange);	//Health가 변경되었을떄 실행될 함수 바인딩
 
 	}
 
@@ -64,21 +91,26 @@ void ATestCharacter::BeginPlay()
 				ITwinResource::Execute_UpdateCurrentHealth(BarWidgetComponent->GetWidget(), ResourceAttributeSet->GetHealth());
 				ITwinResource::Execute_UpdateCurrentMana(BarWidgetComponent->GetWidget(), ResourceAttributeSet->GetMana());
 			}
-
+		}
 		//ResourceAttributeSet->Health = 50.0f;	// 절대 안됨
 		//ResourceAttributeSet->SetHealth(50.0f);	// 무조건 Setter로 변경해야 한다.
-	
-		}
 	}
+	Tag_EffectDamage = FGameplayTag::RequestGameplayTag(FName("Effect.Damage"));
+
 }
+
 
 // Called every frame
 void ATestCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
+	if (ResourceAttributeSet)
+	{
 	FString healthString = FString::Printf(TEXT("%.1f / %.1f"),
 		ResourceAttributeSet->GetHealth(), ResourceAttributeSet->GetMaxHealth());
+
+	}
 	//UE_LOG(LogTemp, Log, TEXT("%s"), *healthString);
 	//	DrawDebugString(GetWorld(), GetActorLocation(), healthString, nullptr, FColor::White, 0, true);
 
@@ -101,10 +133,21 @@ void ATestCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 }
 
+void ATestCharacter::OnMaxHealthChange(const FOnAttributeChangeData& InData)
+{
+	ITwinResource::Execute_UpdateMaxHealth(BarWidgetComponent->GetWidget(), ResourceAttributeSet->GetMana());
+
+}
+
 void ATestCharacter::OnHealthChange(const FOnAttributeChangeData& InData)
 {
 	UE_LOG(LogTemp, Log, TEXT("Health Change : %.1f->%.1f"), InData.OldValue, InData.NewValue);
 	ITwinResource::Execute_UpdateCurrentHealth(BarWidgetComponent->GetWidget(), ResourceAttributeSet->GetHealth());
+}
+
+void ATestCharacter::OnMaxManaChange(const FOnAttributeChangeData& InData)
+{
+	ITwinResource::Execute_UpdateMaxMana(BarWidgetComponent->GetWidget(), ResourceAttributeSet->GetMaxMana());
 }
 
 void ATestCharacter::OnManaChange(const FOnAttributeChangeData& InData)

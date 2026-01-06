@@ -25,6 +25,15 @@ void UResourceAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribu
 		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxHealth());
 		UE_LOG(LogTemp, Log, TEXT("Health가 변경되었다 (%.1f -> %.1f)"), GetHealth(), NewValue);
 	}
+	if (Attribute == GetMaxHealthAttribute()) //MaxHealth가 변경되었는데
+	{
+		if (NewValue < GetHealth())
+		{
+			// Health를 MaxHealth의 새 값으로 덮어써라
+		UAbilitySystemComponent* AlilityComp = GetOwningAbilitySystemComponentChecked();
+		AlilityComp->ApplyModToAttribute(GetHealthAttribute(), EGameplayModOp::Override, NewValue);
+		}
+	}
 }
 
 void UResourceAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
@@ -37,10 +46,17 @@ void UResourceAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCa
 		UE_LOG(LogTemp, Log, TEXT("현재 Health : %.1f"), GetHealth());
 		// 채력 변화 로직 호출
 
+		SetHealth(FMath::Clamp(GetHealth(), 0, GetMaxHealth()));
+
 		if (GetHealth() <= 0.0f)
 		{
 			UE_LOG(LogTemp, Log, TEXT("사망"));
 			// 캐릭터 사망처리 로직 호출
 		}
+	}
+
+	if (Data.EvaluatedData.Attribute == GetManaAttribute())
+	{
+		SetMana(FMath::Clamp(GetMana(), 0.0f, GetMaxMana()));
 	}
 }

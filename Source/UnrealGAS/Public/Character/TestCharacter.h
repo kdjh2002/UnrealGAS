@@ -10,6 +10,7 @@
 
 class UResourceAttributeSet;
 class UWidgetComponent;
+class UGameplayEffect;
 
 
 UCLASS()
@@ -27,6 +28,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void TestHealthChange(float Amount);
+	UFUNCTION(BlueprintCallable)
+	void TestSetByCaller(float Amount);
 
 protected:
 	// Called when the game starts or when spawned
@@ -37,21 +40,16 @@ protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
+	void OnMaxHealthChange(const FOnAttributeChangeData& InData);
 	void OnHealthChange(const FOnAttributeChangeData& InData);
-
+	void OnMaxManaChange(const FOnAttributeChangeData& InData);
 	void OnManaChange(const FOnAttributeChangeData& InData);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Test")
 	float TestValue = 10.0f;
-
-//public:
-//	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ability")
-//	TObjectPtr<UWidgetComponent> HealthWidgetComponent = nullptr;
-//	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ability")
-//	TObjectPtr<UWidgetComponent> ManaWidgetComponent = nullptr;
-
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Test")
+	TSubclassOf<UGameplayEffect> TestEffectClass = nullptr;
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ability")
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent = nullptr;
@@ -63,4 +61,7 @@ protected:
 private:
 	UPROPERTY()
 	TObjectPtr<UResourceAttributeSet> ResourceAttributeSet = nullptr;
+
+
+	FGameplayTag Tag_EffectDamage;
 };

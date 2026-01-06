@@ -28,6 +28,8 @@ public:
 	UResourceAttributeSet();
 
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+
+	//Instant타입의 이팩트가 적용된 직후에만 호출(Duration이나 Ininite는 )
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 
 
