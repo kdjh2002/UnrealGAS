@@ -100,20 +100,20 @@ void ATestCharacter::BeginPlay()
 			AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UResourceAttributeSet::GetManaAttribute());
 		onManaChange.AddUObject(this, &ATestCharacter::OnManaChange);	//Health가 변경되었을떄 실행될 함수 바인딩
 
-		FOnGameplayAttributeValueChange& onJumpPowerChange =
-			AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UStatusAttributeSet::GetJumpPowerAttribute());
-		onJumpPowerChange.AddUObject(this, &ATestCharacter::OnJumpPowerChange);	//Health가 변경되었을떄 실행될 함수 바인딩
+	//	FOnGameplayAttributeValueChange& onJumpPowerChange =
+	//		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UStatusAttributeSet::GetJumpPowerAttribute());
+	//	onJumpPowerChange.AddUObject(this, &ATestCharacter::OnJumpPowerChange);	//Health가 변경되었을떄 실행될 함수 바인딩
 
-		FOnGameplayAttributeValueChange& onSpeedChange =
-			AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UStatusAttributeSet::GetSpeedAttribute());
-		onSpeedChange.AddUObject(this, &ATestCharacter::OnSpeedChange);	//Health가 변경되었을떄 실행될 함수 바인딩
+	//	FOnGameplayAttributeValueChange& onSpeedChange =
+	//		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UStatusAttributeSet::GetSpeedAttribute());
+	//	onSpeedChange.AddUObject(this, &ATestCharacter::OnSpeedChange);	//Health가 변경되었을떄 실행될 함수 바인딩
 
-		if (AbilitySystemComponent && StatusAttributeSet)
-		{
-			// 실제 Movement에 설정된 값을 GAS 수치로 가져오기
-			StatusAttributeSet->InitSpeed(GetCharacterMovement()->MaxWalkSpeed);
-			StatusAttributeSet->InitJumpPower(GetCharacterMovement()->JumpZVelocity);
-		}
+	//	if (AbilitySystemComponent && StatusAttributeSet)
+	//	{
+	//		// 실제 Movement에 설정된 값을 GAS 수치로 가져오기
+	//		StatusAttributeSet->InitSpeed(GetCharacterMovement()->MaxWalkSpeed);
+	//		StatusAttributeSet->InitJumpPower(GetCharacterMovement()->JumpZVelocity);
+	//	}
 	}
 
 	if (ResourceAttributeSet)
@@ -134,6 +134,15 @@ void ATestCharacter::BeginPlay()
 	}
 	Tag_EffectDamage = FGameplayTag::RequestGameplayTag(FName("Effect.Damage"));
 
+	if (InitializeEffectClass && AbilitySystemComponent)
+	{
+		FGameplayEffectContextHandle EffectContext = AbilitySystemComponent->MakeEffectContext();
+		FGameplayEffectSpecHandle SpecHandle = AbilitySystemComponent->MakeOutgoingSpec(InitializeEffectClass, 0, EffectContext);
+		if (SpecHandle.IsValid())
+		{
+			AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+		}
+	}
 }
 
 
@@ -182,16 +191,16 @@ void ATestCharacter::OnManaChange(const FOnAttributeChangeData& InData)
 	ITwinResource::Execute_UpdateCurrentMana(BarWidgetComponent->GetWidget(), ResourceAttributeSet->GetMana());
 }
 
-void ATestCharacter::OnJumpPowerChange(const FOnAttributeChangeData& InData)
-{
-	// 수치가 변하면 즉시 캐릭터 속도에 반영 (PostGameplayEffectExecute와 중복이지만 안전함)
-	GetCharacterMovement()->MaxWalkSpeed = InData.NewValue;
-}
-
-void ATestCharacter::OnSpeedChange(const FOnAttributeChangeData& InData)
-{
-	GetCharacterMovement()->JumpZVelocity = InData.NewValue;
-}
-
-
-
+//void ATestCharacter::OnJumpPowerChange(const FOnAttributeChangeData& InData)
+//{
+//	// 수치가 변하면 즉시 캐릭터 속도에 반영 (PostGameplayEffectExecute와 중복이지만 안전함)
+//	GetCharacterMovement()->MaxWalkSpeed = InData.NewValue;
+//}
+//
+//void ATestCharacter::OnSpeedChange(const FOnAttributeChangeData& InData)
+//{
+//	GetCharacterMovement()->JumpZVelocity = InData.NewValue;
+//}
+//
+//
+//

@@ -50,8 +50,8 @@ private:
 	void OnHealthChange(const FOnAttributeChangeData& InData);
 	void OnMaxManaChange(const FOnAttributeChangeData& InData);
 	void OnManaChange(const FOnAttributeChangeData& InData);
-	void OnJumpPowerChange(const FOnAttributeChangeData& InData);
-	void OnSpeedChange(const FOnAttributeChangeData& InData);
+	//void OnJumpPowerChange(const FOnAttributeChangeData& InData);
+	//void OnSpeedChange(const FOnAttributeChangeData& InData);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Test")
@@ -60,6 +60,9 @@ public:
 	TSubclassOf<UGameplayEffect> TestEffectClass = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Test")
 	TSubclassOf<UGameplayEffect> TestInfiniteEffectClass = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Test")
+	TSubclassOf<UGameplayEffect> InitializeEffectClass = nullptr;
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ability")
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent = nullptr;
