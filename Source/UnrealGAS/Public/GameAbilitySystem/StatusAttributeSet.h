@@ -24,6 +24,7 @@ public:
 	//Instant타입의 이팩트가 적용된 직후에만 호출(Duration이나 Ininite는 )
 	//virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 
+	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 	virtual void PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue) override;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Attribute")
@@ -34,8 +35,12 @@ public:
 	FGameplayAttributeData JumpPower;
 	ATTRIBUTE_ACCESSORS(UStatusAttributeSet, JumpPower)
 
-		UPROPERTY(BlueprintReadOnly, Category = "Attribute")
+	UPROPERTY(BlueprintReadOnly, Category = "Attribute")
 	FGameplayAttributeData AttackPower;
 	ATTRIBUTE_ACCESSORS(UStatusAttributeSet, AttackPower)
+
+	UPROPERTY(BlueprintReadOnly, Category = "Attribute")
+	FGameplayAttributeData CriticalRate;
+	ATTRIBUTE_ACCESSORS(UStatusAttributeSet, CriticalRate)
 
 };

@@ -13,6 +13,18 @@ UStatusAttributeSet::UStatusAttributeSet()
 	InitMoveSpeed(500.0f);
 	InitJumpPower(700.0f);
 	InitAttackPower(20.0f);
+	InitCriticalRate(0.1f);
+}
+
+void UStatusAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+{
+	Super::PreAttributeBaseChange(Attribute, NewValue);
+
+	if(Attribute == GetCriticalRateAttribute())
+	{
+		//크리티컬 확률은 0~1사이로 제한
+		NewValue = FMath::Clamp(NewValue, 0.0f, 1.0f);
+	}
 }
 
 void UStatusAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue)
