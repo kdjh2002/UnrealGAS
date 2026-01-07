@@ -34,5 +34,8 @@ public:
 	FGameplayAttributeData JumpPower;
 	ATTRIBUTE_ACCESSORS(UStatusAttributeSet, JumpPower)
 
+		UPROPERTY(BlueprintReadOnly, Category = "Attribute")
+	FGameplayAttributeData AttackPower;
+	ATTRIBUTE_ACCESSORS(UStatusAttributeSet, AttackPower)
 
 };

@@ -12,6 +12,7 @@ UStatusAttributeSet::UStatusAttributeSet()
 	//초기값 설정
 	InitMoveSpeed(500.0f);
 	InitJumpPower(700.0f);
+	InitAttackPower(20.0f);
 }
 
 void UStatusAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue)
