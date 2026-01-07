@@ -35,7 +35,8 @@ public:
 	void TestAddInfiniteEffect();
 	UFUNCTION(BlueprintCallable)
 	void TestRemoveInfiniteEffect();
-
+	UFUNCTION(BlueprintCallable)
+	void TestAbility();
 
 protected:
 	// Called when the game starts or when spawned
@@ -56,13 +57,19 @@ private:
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Test")
 	float TestValue = 10.0f;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Test")
 	TSubclassOf<UGameplayEffect> TestEffectClass = nullptr;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Test")
 	TSubclassOf<UGameplayEffect> TestInfiniteEffectClass = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Test")
 	TSubclassOf<UGameplayEffect> InitializeEffectClass = nullptr;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ability")
+	TSubclassOf<UGameplayAbility> HasteClass = nullptr;
+
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ability")
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent = nullptr;

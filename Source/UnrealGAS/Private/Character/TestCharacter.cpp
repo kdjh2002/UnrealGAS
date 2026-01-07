@@ -78,6 +78,14 @@ void ATestCharacter::TestRemoveInfiniteEffect()
 	}
 }
 
+void ATestCharacter::TestAbility()
+{
+	if(AbilitySystemComponent && HasteClass)
+	{
+		AbilitySystemComponent->TryActivateAbilityByClass(HasteClass);
+	}
+}
+
 // Called when the game starts or when spawned
 void ATestCharacter::BeginPlay()
 {
@@ -86,6 +94,18 @@ void ATestCharacter::BeginPlay()
 	if (AbilitySystemComponent)
 	{
 		AbilitySystemComponent->InitAbilityActorInfo(this, this);	// 어빌리티 시스템 컴포넌트 초기화
+
+		if (HasteClass)
+		{
+			AbilitySystemComponent->GiveAbility(
+				FGameplayAbilitySpec(
+					HasteClass,		// 어빌리티 클래스
+					1,				// 레벨
+					-1,				// 입력 ID
+					this			// 소스
+				)
+			);
+		}
 
 		//초기화 이후에만 가능
 		FOnGameplayAttributeValueChange& onHealthChange =
@@ -99,14 +119,6 @@ void ATestCharacter::BeginPlay()
 		FOnGameplayAttributeValueChange& onManaChange =
 			AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UResourceAttributeSet::GetManaAttribute());
 		onManaChange.AddUObject(this, &ATestCharacter::OnManaChange);	//Health가 변경되었을떄 실행될 함수 바인딩
-
-	//	FOnGameplayAttributeValueChange& onJumpPowerChange =
-	//		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UStatusAttributeSet::GetJumpPowerAttribute());
-	//	onJumpPowerChange.AddUObject(this, &ATestCharacter::OnJumpPowerChange);	//Health가 변경되었을떄 실행될 함수 바인딩
-
-	//	FOnGameplayAttributeValueChange& onSpeedChange =
-	//		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UStatusAttributeSet::GetSpeedAttribute());
-	//	onSpeedChange.AddUObject(this, &ATestCharacter::OnSpeedChange);	//Health가 변경되었을떄 실행될 함수 바인딩
 
 	//	if (AbilitySystemComponent && StatusAttributeSet)
 	//	{

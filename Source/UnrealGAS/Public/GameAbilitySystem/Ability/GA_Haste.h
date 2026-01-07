@@ -14,4 +14,16 @@ class UNREALGAS_API UGA_Haste : public UGameplayAbility
 {
 	GENERATED_BODY()
 	
+public:
+	UGA_Haste();
+
+	virtual void ActivateAbility(
+		const FGameplayAbilitySpecHandle Handle, 
+		const FGameplayAbilityActorInfo* ActorInfo, 
+		const FGameplayAbilityActivationInfo ActivationInfo, 
+		const FGameplayEventData* TriggerEventData) override;
+
+protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Ability|Haste")
+	TSubclassOf<UGameplayEffect> EffectClass = nullptr;
 };
