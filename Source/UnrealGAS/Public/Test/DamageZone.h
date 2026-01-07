@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "GameplayEffectTypes.h"
 #include "DamageZone.generated.h"
 
 UCLASS()
@@ -17,7 +18,7 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS")
-	TSubclassOf<class UGameplayAffect> DamageEffectClass = nullptr;
+	TSubclassOf<class UGameplayEffect> DamageEffectClass = nullptr;
 
 protected:
 	// Called when the game starts or when spawned
@@ -30,6 +31,7 @@ private:
 	void OnEndOverlap(AActor* OverlappedActor, AActor* OtherActor);
 
 private:
-
+	//ASC를 키값으로 한 적용된 이팩트 핸들 모음
+	TMap<class UAbilitySystemComponent*, FActiveGameplayEffectHandle> ActiveEffectHandles;
 
 };

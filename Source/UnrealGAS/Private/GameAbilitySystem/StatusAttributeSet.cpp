@@ -26,6 +26,7 @@ void UStatusAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribut
 		{
 			OwningChar->GetCharacterMovement()->MaxWalkSpeed = NewValue;
 		}
+	}
 
 		if (Attribute == GetJumpPowerAttribute())
 		{
@@ -33,10 +34,9 @@ void UStatusAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribut
 			ACharacter* OwningChar = Cast<ACharacter>(OwningActor);
 			if (OwningChar)
 			{
-				OwningChar->GetCharacterMovement()->
+				OwningChar->GetCharacterMovement()->JumpZVelocity = NewValue;
 			}
 		}
-	}
 }
 
 //void UStatusAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
