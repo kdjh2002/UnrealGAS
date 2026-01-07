@@ -4,8 +4,8 @@
 #include "Character/TestCharacter.h"
 #include "AbilitySystemComponent.h"
 #include "Components/WidgetComponent.h"
-#include "GameAbilitySystem/ResourceAttributeSet.h"
-#include "GameAbilitySystem/StatusAttributeSet.h"
+#include "GameAbilitySystem/AttributeSet/ResourceAttributeSet.h"
+#include "GameAbilitySystem/AttributeSet/StatusAttributeSet.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 #include "Interface/TwinResource.h"
