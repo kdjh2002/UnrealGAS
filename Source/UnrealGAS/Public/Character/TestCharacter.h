@@ -53,6 +53,7 @@ private:
 	void OnManaChange(const FOnAttributeChangeData& InData);
 
 	void OnAbility1Press();
+	void OnSuperJumpPress();
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Test")
@@ -79,6 +80,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
 	TObjectPtr<class UInputAction> IA_Ability1 = nullptr;	
+
+	UPROPERTY(EditDefaultsOnly, BlueprintREadOnly, Category = "Input")
+	TObjectPtr<class UInputAction> IA_SuperJump = nullptr;
 
 
 private:

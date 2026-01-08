@@ -179,11 +179,12 @@ void ATestCharacter::Tick(float DeltaTime)
 void ATestCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
+	
 	UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>(PlayerInputComponent);
 	if (EnhancedInput)
 	{
 		EnhancedInput->BindAction(IA_Ability1, ETriggerEvent::Started, this, &ATestCharacter::OnAbility1Press);
+		EnhancedInput->BindAction(IA_SuperJump, ETriggerEvent::Started, this, &ATestCharacter::OnSuperJumpPress);
 	}
 
 }
@@ -217,5 +218,21 @@ void ATestCharacter::OnAbility1Press()
 	if (AbilitySystemComponent)
 	{
 		AbilitySystemComponent->AbilityLocalInputPressed(static_cast<int32>(EAbilityInputID::Haste)); // 입력ID
+	}
+}
+
+void ATestCharacter::OnSuperJumpPress()
+{
+	UCharacterMovementComponent* MoveComp = GetCharacterMovement();
+	if (MoveComp)
+	{
+	if (MoveComp->Velocity.Z < 0.0f)
+	{
+	FVector LaunchVelocity = FVector(0.0f, 0.0f, 1500.0f);
+	LaunchCharacter(LaunchVelocity, false, true);	// 수평은 유지, 수직은 T로 변경
+
+	UE_LOG(LogTemp, Warning, TEXT("OnSuperJumpPress 성공"));
+
+	}
 	}
 }
