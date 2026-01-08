@@ -17,6 +17,7 @@ void UGA_ChargingJump::ActivateAbility(const FGameplayAbilitySpecHandle Handle, 
 	{
 		EndAbility(Handle, ActorInfo, ActivationInfo, true, true);	// 쿨타임이나 코스트 문제
 		return;
+
 	}
 
 	CurrentChargingTime = 0.0f;	// 차징 시간 초기화
@@ -42,7 +43,7 @@ void UGA_ChargingJump::ActivateAbility(const FGameplayAbilitySpecHandle Handle, 
 			ChargingEffectHandle = ActorInfo->AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*Spec.Data.Get());
 		}
 	}
-	//UE_LOG(LogTemp, Log, TEXT("UGA_ChargingJump : 차징 시작"));
+		//UE_LOG(LogTemp, Log, TEXT("UGA_ChargingJump : 차징 시작"));
 }
 
 void UGA_ChargingJump::InputReleased(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
