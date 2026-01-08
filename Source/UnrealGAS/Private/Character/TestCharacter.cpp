@@ -109,6 +109,30 @@ void ATestCharacter::BeginPlay()
 			);
 		}
 
+		if (SuperJumpClass)
+		{
+			AbilitySystemComponent->GiveAbility(
+				FGameplayAbilitySpec(
+					SuperJumpClass,									// 어빌리티 클래스
+					1,												// 레벨
+					static_cast<int32>(EAbilityInputID::SuperJump),	// 입력 ID
+					this											// 소스
+				)
+			);
+		}
+
+		if (ChargingJumpClass)
+		{
+			AbilitySystemComponent->GiveAbility(
+				FGameplayAbilitySpec(
+					ChargingJumpClass,									// 어빌리티 클래스
+					1,													// 레벨
+					static_cast<int32>(EAbilityInputID::ChargingJump),	// 입력 ID
+					this												// 소스
+				)
+			);
+		}
+
 		//초기화 이후에만 가능
 		FOnGameplayAttributeValueChange& onHealthChange =
 			AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UResourceAttributeSet::GetHealthAttribute());
@@ -185,10 +209,14 @@ void ATestCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	{
 		EnhancedInput->BindAction(IA_Ability1, ETriggerEvent::Started, this, &ATestCharacter::OnAbility1Press);
 		EnhancedInput->BindAction(IA_SuperJump, ETriggerEvent::Started, this, &ATestCharacter::OnSuperJumpPress);
+		EnhancedInput->BindAction(IA_Ability2, ETriggerEvent::Started, this, &ATestCharacter::OnAbility2Press);
+		EnhancedInput->BindAction(IA_Ability3, ETriggerEvent::Started, this, &ATestCharacter::OnAbility3Press);
+		EnhancedInput->BindAction(IA_Ability3, ETriggerEvent::Completed, this, &ATestCharacter::OnAbility3Release);
+			
 	}
 
 }
-
+	
 void ATestCharacter::OnMaxHealthChange(const FOnAttributeChangeData& InData)
 {
 	ITwinResource::Execute_UpdateMaxHealth(BarWidgetComponent->GetWidget(), ResourceAttributeSet->GetMana());
@@ -221,18 +249,39 @@ void ATestCharacter::OnAbility1Press()
 	}
 }
 
+void ATestCharacter::OnAbility2Press()
+{
+
+
+	UE_LOG(LogTemp, Log, TEXT("OnAbility2Press"));
+	if (AbilitySystemComponent)
+	{
+		AbilitySystemComponent->AbilityLocalInputPressed(static_cast<int32>(EAbilityInputID::SuperJump));
+	}
+}
+
+void ATestCharacter::OnAbility3Press()
+{
+	UE_LOG(LogTemp, Log, TEXT("OnAbility3Press"));
+}
+
+void ATestCharacter::OnAbility3Release()
+{
+	UE_LOG(LogTemp, Log, TEXT("OnAbility3Release"));
+}
+
 void ATestCharacter::OnSuperJumpPress()
 {
 	UCharacterMovementComponent* MoveComp = GetCharacterMovement();
 	if (MoveComp)
 	{
-	if (MoveComp->Velocity.Z < 0.0f)
-	{
-	FVector LaunchVelocity = FVector(0.0f, 0.0f, 1500.0f);
-	LaunchCharacter(LaunchVelocity, false, true);	// 수평은 유지, 수직은 T로 변경
+		if (MoveComp->Velocity.Z < 0.0f)
+		{
+		FVector LaunchVelocity = FVector(0.0f, 0.0f, 1500.0f);
+		LaunchCharacter(LaunchVelocity, false, true);	// 수평은 유지, 수직은 T로 변경
 
-	UE_LOG(LogTemp, Warning, TEXT("OnSuperJumpPress 성공"));
+		UE_LOG(LogTemp, Warning, TEXT("OnSuperJumpPress 성공"));
 
-	}
+		}
 	}
 }
