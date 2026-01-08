@@ -7,8 +7,10 @@
 #include "GameAbilitySystem/AttributeSet/ResourceAttributeSet.h"
 #include "GameAbilitySystem/AttributeSet/StatusAttributeSet.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameAbilitySystem/GameAbilitySystemEnums.h"
 
 #include "Interface/TwinResource.h"
+#include "EnhancedInputComponent.h"
 #include "UI/BarWidget.h"
 
 // Sets default values
@@ -101,7 +103,7 @@ void ATestCharacter::BeginPlay()
 				FGameplayAbilitySpec(
 					HasteClass,		// 어빌리티 클래스
 					1,				// 레벨
-					-1,				// 입력 ID
+					static_cast<int32>(EAbilityInputID::Haste),				// 입력 ID
 					this			// 소스
 				)
 			);
@@ -178,6 +180,12 @@ void ATestCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+	if (EnhancedInput)
+	{
+		EnhancedInput->BindAction(IA_Ability1, ETriggerEvent::Started, this, &ATestCharacter::OnAbility1Press);
+	}
+
 }
 
 void ATestCharacter::OnMaxHealthChange(const FOnAttributeChangeData& InData)
@@ -203,16 +211,11 @@ void ATestCharacter::OnManaChange(const FOnAttributeChangeData& InData)
 	ITwinResource::Execute_UpdateCurrentMana(BarWidgetComponent->GetWidget(), ResourceAttributeSet->GetMana());
 }
 
-//void ATestCharacter::OnJumpPowerChange(const FOnAttributeChangeData& InData)
-//{
-//	// 수치가 변하면 즉시 캐릭터 속도에 반영 (PostGameplayEffectExecute와 중복이지만 안전함)
-//	GetCharacterMovement()->MaxWalkSpeed = InData.NewValue;
-//}
-//
-//void ATestCharacter::OnSpeedChange(const FOnAttributeChangeData& InData)
-//{
-//	GetCharacterMovement()->JumpZVelocity = InData.NewValue;
-//}
-//
-//
-//
+void ATestCharacter::OnAbility1Press()
+{
+	UE_LOG(LogTemp, Log, TEXT("OnAbilityPress"));
+	if (AbilitySystemComponent)
+	{
+		AbilitySystemComponent->AbilityLocalInputPressed(static_cast<int32>(EAbilityInputID::Haste)); // 입력ID
+	}
+}

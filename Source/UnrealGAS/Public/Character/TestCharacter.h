@@ -51,8 +51,8 @@ private:
 	void OnHealthChange(const FOnAttributeChangeData& InData);
 	void OnMaxManaChange(const FOnAttributeChangeData& InData);
 	void OnManaChange(const FOnAttributeChangeData& InData);
-	//void OnJumpPowerChange(const FOnAttributeChangeData& InData);
-	//void OnSpeedChange(const FOnAttributeChangeData& InData);
+
+	void OnAbility1Press();
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Test")
@@ -76,6 +76,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
 	TObjectPtr<UWidgetComponent> BarWidgetComponent = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
+	TObjectPtr<class UInputAction> IA_Ability1 = nullptr;	
 
 
 private:
